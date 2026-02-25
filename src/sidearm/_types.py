@@ -1,0 +1,147 @@
+from __future__ import annotations
+
+from typing import Any, Literal, TypedDict
+
+
+# ---------------------------------------------------------------------------
+# Enums as Literal unions
+# ---------------------------------------------------------------------------
+
+MediaType = Literal["image", "video", "audio", "gif", "text", "pdf"]
+AlgorithmCategory = Literal["open", "proprietary"]
+ProtectionLevel = Literal["standard", "maximum"]
+SearchTier = Literal["exact", "quick", "perceptual", "compositional", "full"]
+DetectTier = Literal["exact", "quick", "perceptual", "compositional", "full"]
+MembershipMethod = Literal["pattern", "statistical", "combined"]
+EmbedMode = Literal["register", "basic", "advanced", "radioactive"]
+JobStatus = Literal["queued", "running", "completed", "failed"]
+
+
+# ---------------------------------------------------------------------------
+# API resources
+# ---------------------------------------------------------------------------
+
+
+class Algorithm(TypedDict, total=False):
+    id: str
+    name: str
+    summary: str
+    description: str
+    category: AlgorithmCategory
+    media_types: list[MediaType]
+    technique: str
+    gpu_required: bool
+    paper_url: str | None
+    runnable: bool
+    resolves_to: list[str]
+
+
+class Media(TypedDict, total=False):
+    id: str
+    account_id: str
+    media_type: MediaType
+    manifest: str
+    storage_url: str
+    original_storage_key: str
+    preset: str
+    algorithms_applied: list[str]
+    deletes_at: str
+    tags: list[str]
+    metadata: dict[str, Any]
+    status: Literal["active", "processing"]
+    created_at: str
+    updated_at: str
+
+
+class JobData(TypedDict, total=False):
+    id: str
+    type: str
+    status: JobStatus
+    preset: str | None
+    progress: dict[str, int] | None
+    result: dict[str, Any] | None
+    error: str | None
+    created_at: str
+    updated_at: str
+
+
+class Rights(TypedDict, total=False):
+    media_id: str
+    c2pa: dict[str, Any]
+    schema_org: dict[str, Any]
+    iptc: dict[str, Any]
+    tdm: dict[str, Any]
+    rsl: dict[str, Any]
+
+
+class BillingEvent(TypedDict, total=False):
+    id: str
+    type: str
+    quantity: int
+    unit: str
+    tag: str | None
+    api_token_id: str | None
+    metadata: dict[str, Any] | None
+    created_at: str
+
+
+class BillingSummary(TypedDict, total=False):
+    credit_balance: int
+    total_credits_used: int
+    protection_credits: int
+    storage_credits: int
+
+
+class StorageStats(TypedDict, total=False):
+    total_bytes: int
+    file_count: int
+    daily_cost: int
+    weekly_cost: int
+    monthly_cost: int
+    rate_per_mb_per_day: float
+
+
+class AlgorithmUsage(TypedDict, total=False):
+    algorithm: str
+    display_name: str
+    operations: int
+    credits: int
+
+
+class BillingData(TypedDict, total=False):
+    summary: BillingSummary
+    storage: StorageStats | None
+    by_algorithm: list[AlgorithmUsage]
+    events: list[BillingEvent]
+    portal_url: str | None
+
+
+# ---------------------------------------------------------------------------
+# Response types
+# ---------------------------------------------------------------------------
+
+
+class JobCreatedResponse(TypedDict):
+    job_id: str
+    status_url: str
+
+
+class SearchResult(TypedDict, total=False):
+    media_id: str
+    score: float
+    tier: str
+    media: Media
+
+
+class SearchResponse(TypedDict, total=False):
+    results: list[SearchResult]
+
+
+class PaginatedResponse(TypedDict, total=False):
+    data: list[Any]
+    cursor: str | None
+    has_more: bool
+
+
+class BillingResponse(TypedDict, total=False):
+    data: BillingData
