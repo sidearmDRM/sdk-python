@@ -145,3 +145,39 @@ class PaginatedResponse(TypedDict, total=False):
 
 class BillingResponse(TypedDict, total=False):
     data: BillingData
+
+
+class ProvenanceProtectionStep(TypedDict, total=False):
+    id: str
+    algorithm: str
+    algorithm_version: str
+    applied_at: str
+    duration_ms: int | None
+    metadata: dict[str, Any] | None
+
+
+class ProvenanceSearchMatch(TypedDict, total=False):
+    search_id: str
+    search_type: str
+    score: float
+    rank: int
+    searched_at: str
+
+
+class ProvenanceMedia(TypedDict, total=False):
+    id: str
+    type: str
+    account_id: str
+    tags: list[str]
+    is_public: bool
+    created_at: str
+    updated_at: str
+    expires_at: str
+
+
+class ProvenanceResult(TypedDict, total=False):
+    media: ProvenanceMedia
+    c2pa_manifest: str | None
+    protection_chain: list[ProvenanceProtectionStep]
+    membership_inference: list[dict[str, Any]]
+    searches_found_in: list[ProvenanceSearchMatch]

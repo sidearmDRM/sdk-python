@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
-from .._types import EmbedMode, Media
+from .._types import EmbedMode, Media, ProvenanceResult
 
 if TYPE_CHECKING:
     from .._client import HttpClient
@@ -62,3 +62,13 @@ class MediaResource:
     def delete(self, media_id: str) -> dict[str, bool]:
         """Permanently delete a media asset."""
         return self._http.delete(f"/api/v1/media/{quote(media_id, safe='')}")
+
+    def provenance(self, media_id: str) -> ProvenanceResult:
+        """
+        Get the full provenance chain for a media asset.
+
+        Returns every algorithm applied (with versions, timings, and metadata),
+        the C2PA manifest, any AI training membership inference results, and
+        every search where this media appeared as a match.
+        """
+        return self._http.get(f"/api/v1/media/{quote(media_id, safe='')}/provenance")
