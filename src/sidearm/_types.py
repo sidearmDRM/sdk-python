@@ -123,6 +123,7 @@ class BillingData(TypedDict, total=False):
 
 class JobCreatedResponse(TypedDict):
     job_id: str
+    status: JobStatus
     status_url: str
 
 
@@ -144,7 +145,11 @@ class PaginatedResponse(TypedDict, total=False):
 
 
 class BillingResponse(TypedDict, total=False):
-    data: BillingData
+    summary: BillingSummary
+    storage: StorageStats | None
+    by_algorithm: list[AlgorithmUsage]
+    events: list[BillingEvent]
+    portal_url: str | None
 
 
 class ProvenanceProtectionStep(TypedDict, total=False):

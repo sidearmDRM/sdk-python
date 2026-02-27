@@ -56,7 +56,10 @@ class HttpClient:
             raise SidearmError(msg, resp.status_code, body=resp.text)
         if not resp.text:
             return None
-        return resp.json()
+        body = resp.json()
+        if isinstance(body, dict) and "data" in body:
+            return body["data"]
+        return body
 
     def close(self) -> None:
         self._http.close()
