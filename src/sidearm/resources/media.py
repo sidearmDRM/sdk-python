@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
-from .._types import EmbedMode, Media, ProvenanceResult
+from .._types import EmbedMode, Media, ProvenanceResult, IdentifyResult
 
 if TYPE_CHECKING:
     from .._client import HttpClient
@@ -72,3 +72,17 @@ class MediaResource:
         every search where this media appeared as a match.
         """
         return self._http.get(f"/api/v1/media/{quote(media_id, safe='')}/provenance")
+
+    def identify(self, media_url: str) -> IdentifyResult:
+        """
+        Identify a media asset by its embedded Sidearm fingerprint and C2PA chain.
+
+        Returns the Sidearm ``media_id`` if the asset is registered in your account
+        (``None`` otherwise) and the full ordered C2PA chain embedded in the file
+        (e.g. Nikon Z7II → Adobe Photoshop → sidearm). ``c2pa_chain`` is an empty
+        list if no C2PA manifest is present.
+        """
+        return self._http.post(
+            "/api/v1/media/identify",
+            json={"media_url": media_url},
+        )

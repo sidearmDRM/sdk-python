@@ -186,3 +186,16 @@ class ProvenanceResult(TypedDict, total=False):
     protection_chain: list[ProvenanceProtectionStep]
     membership_inference: list[dict[str, Any]]
     searches_found_in: list[ProvenanceSearchMatch]
+
+
+class C2paChainEntry(TypedDict, total=False):
+    """One step in a C2PA provenance chain, ordered from origin to current."""
+    generator: str  # e.g. "Nikon Z7II", "Adobe Photoshop/24.0", "sidearm/1.0"
+    title: str | None
+    actions: list[str]  # e.g. ["c2pa.captured"], ["c2pa.edited"]
+
+
+class IdentifyResult(TypedDict, total=False):
+    """Result of fingerprint identification and C2PA extraction."""
+    media_id: str | None  # Sidearm media ID if registered, else None
+    c2pa_chain: list[C2paChainEntry]
