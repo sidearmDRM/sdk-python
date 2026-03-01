@@ -11,6 +11,7 @@ from .resources.jobs import JobsResource
 from .resources.media import MediaResource
 from .resources.protect import ProtectResource
 from .resources.rights import RightsResource
+from .resources.extract import ExtractResource
 from .resources.run import RunResource
 from .resources.search import SearchResource
 
@@ -35,6 +36,7 @@ class Sidearm:
     ) -> None:
         self._http = HttpClient(api_key, base_url)
         self._run = RunResource(self._http)
+        self._extract = ExtractResource(self._http)
         self._protect = ProtectResource(self._http)
 
         self.algorithms = AlgorithmsResource(self._http)
@@ -61,6 +63,10 @@ class Sidearm:
     def run(self, **kwargs) -> Job:
         """Run named algorithms on media. Returns a Job handle."""
         return self._run.execute(**kwargs)
+
+    def extract(self, **kwargs) -> Job:
+        """Extract raw embedding vectors from media. Returns a Job handle."""
+        return self._extract.execute(**kwargs)
 
     def protect(self, **kwargs) -> Job:
         """Protect media with a curated preset. Returns a Job handle."""

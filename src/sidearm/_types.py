@@ -127,6 +127,20 @@ class JobCreatedResponse(TypedDict):
     status_url: str
 
 
+class EmbeddingResult(TypedDict, total=False):
+    algorithm: str
+    vector: list[float]
+    dimension: int
+    metric: Literal["cosine", "hamming"]
+
+
+class ExtractResponse(TypedDict, total=False):
+    embeddings: list[EmbeddingResult]
+    media_type: MediaType
+    algorithms_applied: list[str]
+    algorithms_failed: list[str]
+
+
 class SearchResult(TypedDict, total=False):
     media_id: str
     score: float
