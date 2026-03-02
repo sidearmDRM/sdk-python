@@ -9,6 +9,7 @@ from typing import Any, Literal, TypedDict
 
 MediaType = Literal["image", "video", "audio", "gif", "text", "pdf"]
 AlgorithmCategory = Literal["open", "proprietary"]
+EmbeddingMetric = Literal["COSINE", "L2", "IP", "HAMMING"]
 ProtectionLevel = Literal["standard", "maximum"]
 SearchTier = Literal["exact", "quick", "perceptual", "compositional", "full"]
 DetectTier = Literal["exact", "quick", "perceptual", "compositional", "full"]
@@ -31,9 +32,20 @@ class Algorithm(TypedDict, total=False):
     media_types: list[MediaType]
     technique: str
     gpu_required: bool
+    version: str
+    """Semantic version of this algorithm implementation (e.g., '2.0.0')."""
     paper_url: str | None
     runnable: bool
-    resolves_to: list[str]
+    embedding_version: str | None
+    """Version of the embedding model. Only present for extractable algorithms."""
+    embedding_dimension: int | None
+    """Dimension of vectors produced. Only present for extractable algorithms."""
+    embedding_metric: EmbeddingMetric | None
+    """Similarity metric. Only present for extractable algorithms."""
+    active_collection: str | None
+    """Active Zilliz collection name. Format: {slug}_v{major}. Only for extractable algorithms."""
+    searchable_collections: list[str] | None
+    """All collection names to search (current + legacy). Only for extractable algorithms."""
 
 
 class Media(TypedDict, total=False):
