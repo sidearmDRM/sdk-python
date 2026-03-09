@@ -14,6 +14,7 @@ from .resources.rights import RightsResource
 from .resources.extract import ExtractResource
 from .resources.run import RunResource
 from .resources.search import SearchResource
+from .resources.shares import SharesResource
 
 
 class Sidearm:
@@ -59,6 +60,9 @@ class Sidearm:
 
         self.billing = BillingResource(self._http)
         """Billing and usage events."""
+
+        self.shares = SharesResource(self._http)
+        """Create and manage shareable result links."""
 
     def run(self, **kwargs) -> Job:
         """Run named algorithms on media. Returns a Job handle."""

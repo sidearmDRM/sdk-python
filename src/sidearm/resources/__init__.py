@@ -7,6 +7,7 @@ from .detect import DetectResource
 from .media import MediaResource
 from .rights import RightsResource
 from .billing import BillingResource
+from .shares import SharesResource
 
 __all__ = [
     "AlgorithmsResource",
@@ -18,4 +19,5 @@ __all__ = [
     "MediaResource",
     "RightsResource",
     "BillingResource",
+    "SharesResource",
 ]

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
-from .._types import EmbedMode, Media, ProvenanceResult, IdentifyResult
+from .._types import Deletion, EmbedMode, Media, ProvenanceResult, IdentifyResult
 
 if TYPE_CHECKING:
     from .._client import HttpClient
@@ -85,4 +85,33 @@ class MediaResource:
         return self._http.post(
             "/api/v1/media/identify",
             json={"media_url": media_url},
+        )
+
+    def list_deletions(
+        self,
+        *,
+        cursor: str | None = None,
+        limit: int | None = None,
+    ) -> Any:
+        """List deletion records (paginated)."""
+        return self._http.get(
+            "/api/v1/media/deletions",
+            params={"cursor": cursor, "limit": limit},
+        )
+
+    def get_deletion(self, deletion_id: str) -> Deletion:
+        """Get a specific deletion record."""
+        return self._http.get(
+            f"/api/v1/media/deletions/{quote(deletion_id, safe='')}"
+        )
+
+    def get_deletion_certificate(
+        self,
+        deletion_id: str,
+        format: str = "jwt",
+    ) -> Any:
+        """Get a verifiable deletion certificate."""
+        return self._http.get(
+            f"/api/v1/media/deletions/{quote(deletion_id, safe='')}/certificate",
+            params={"format": format},
         )

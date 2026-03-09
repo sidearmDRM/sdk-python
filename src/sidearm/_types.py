@@ -225,3 +225,21 @@ class IdentifyResult(TypedDict, total=False):
     """Result of fingerprint identification and C2PA extraction."""
     media_id: str | None  # Sidearm media ID if registered, else None
     c2pa_chain: list[C2paChainEntry]
+
+
+class SharedResult(TypedDict, total=False):
+    id: str
+    type: str
+    is_public: bool
+    result: dict
+    created_at: str
+
+
+class Deletion(TypedDict, total=False):
+    id: str
+    media_id: str
+    account_id: str
+    algorithms_purged: list[str]
+    storage_purged: bool
+    vectors_purged: bool
+    created_at: str
