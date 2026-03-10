@@ -14,7 +14,7 @@ ProtectionLevel = Literal["standard", "maximum"]
 SearchTier = Literal["exact", "quick", "perceptual", "compositional", "full"]
 DetectTier = Literal["exact", "quick", "perceptual", "compositional", "full"]
 MembershipMethod = Literal["pattern", "statistical", "combined"]
-EmbedMode = Literal["register", "basic", "advanced", "radioactive"]
+EmbedMode = Literal["register", "search_ready", "standard", "maximum"]
 JobStatus = Literal["queued", "running", "completed", "failed"]
 
 
@@ -57,7 +57,7 @@ class Media(TypedDict, total=False):
     original_storage_key: str
     preset: str
     algorithms_applied: list[str]
-    deletes_at: str
+    expires_at: str
     tags: list[str]
     metadata: dict[str, Any]
     status: Literal["active", "processing"]
@@ -160,14 +160,21 @@ class SearchResult(TypedDict, total=False):
     media: Media
 
 
+class SearchMatch(TypedDict, total=False):
+    media_id: str
+    score: float
+    storage_url: str
+    tags: list[str]
+
+
 class SearchResponse(TypedDict, total=False):
-    results: list[SearchResult]
+    search_id: str
+    matches: list[SearchMatch]
 
 
 class PaginatedResponse(TypedDict, total=False):
     data: list[Any]
     cursor: str | None
-    has_more: bool
 
 
 class BillingResponse(TypedDict, total=False):
@@ -224,6 +231,7 @@ class C2paChainEntry(TypedDict, total=False):
 class IdentifyResult(TypedDict, total=False):
     """Result of fingerprint identification and C2PA extraction."""
     media_id: str | None  # Sidearm media ID if registered, else None
+    manifest_detected: bool
     c2pa_chain: list[C2paChainEntry]
 
 
